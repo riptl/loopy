@@ -1,0 +1,9 @@
+stop 0
+enable 0 range
+range 0 proto udp
+range 0 dst mac 40:a6:b7:98:72:08 40:a6:b7:98:72:08 40:a6:b7:98:72:08 00:00:00:00:00:01
+range 0 src ip 10.0.66.2 10.0.66.2 10.0.66.255 0.0.0.1
+range 0 dst ip 10.0.66.1 10.0.66.1 10.0.66.1 0.0.0.1
+range 0 dst port 9090 9090 9090 1
+range 0 src port 9090 9090 9090 1
+start 0
