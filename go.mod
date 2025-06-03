@@ -1,7 +1,9 @@
 module github.com/riptl/loopy
 
-go 1.22.4
+go 1.23.0
 
-require golang.org/x/net v0.26.0
+toolchain go1.23.9
 
-require golang.org/x/sys v0.21.0 // indirect
+require golang.org/x/net v0.40.0
+
+require golang.org/x/sys v0.33.0 // indirect
