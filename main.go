@@ -33,6 +33,10 @@ func checkConn(link0, link1 link) {
 	iface0, iface1 := link0.s, link1.s
 	addr0, addr1 := link0.a, link1.a
 
+	if !addr0.Is6() || addr0.Is4In6() || !addr1.Is6() || addr1.Is4In6() {
+		return
+	}
+
 	var key [2]string
 	if strings.Compare(iface0, iface1) < 0 {
 		key[0], key[1] = iface0, iface1
@@ -45,7 +49,8 @@ func checkConn(link0, link1 link) {
 
 	c, err := icmp.ListenPacket("udp6", addr0.String()+"%"+iface0)
 	if err != nil {
-		log.Fatal(err)
+		log.Print(err)
+		return
 	}
 	defer c.Close()
 	seq++
@@ -62,7 +67,8 @@ func checkConn(link0, link1 link) {
 	}
 	dest := &net.UDPAddr{IP: addr1.AsSlice(), Zone: iface0}
 	if _, err := c.WriteTo(wb, dest); err != nil {
-		log.Fatal(err)
+		log.Print(err)
+		return
 	}
 	c.SetReadDeadline(time.Now().Add(100 * time.Millisecond))
 	var buf [1024]byte
