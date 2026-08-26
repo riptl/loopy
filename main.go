@@ -147,7 +147,7 @@ func main() {
 			case *net.IPNet:
 				addr, ok = netip.AddrFromSlice(v.IP)
 			}
-			if ok && addr.Is6() && addr.IsLinkLocalUnicast() {
+			if ok && addr.Is6() && !addr.Is4In6() && addr.IsLinkLocalUnicast() {
 				fmt.Printf("\t%-14s %s  %s  %s  %-10s\n", iface.Name, addr.StringExpanded(), iface.HardwareAddr, pci, driver)
 				links = append(links, link{iface.Name, addr, driver, speed, pci})
 			}
