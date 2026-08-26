@@ -7,6 +7,7 @@ import (
 	"net"
 	"net/netip"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"sort"
 	"strconv"
@@ -23,6 +24,12 @@ type link struct {
 	drv   string
 	speed string
 	pci   string
+}
+
+type device struct {
+	iface string
+	pci   string
+	name  string
 }
 
 var links []link
@@ -116,6 +123,24 @@ func getPciPath(iface string) string {
 	return filepath.Base(link)
 }
 
+func getDeviceName(pci string) string {
+	if pci == "???" {
+		return "???"
+	}
+	output, err := exec.Command("lspci", "-s", pci).Output()
+	if err != nil {
+		return "???"
+	}
+	description := strings.TrimSpace(string(output))
+	if _, rest, ok := strings.Cut(description, ": "); ok {
+		description = rest
+	}
+	if description == "" {
+		return "???"
+	}
+	return description
+}
+
 func main() {
 	interfaces, err := net.Interfaces()
 	if err != nil {
@@ -126,6 +151,7 @@ func main() {
 	})
 
 	links = make([]link, 0, len(interfaces))
+	devices := make([]device, 0, len(interfaces))
 
 	fmt.Println()
 	fmt.Println("Addresses:")
@@ -133,6 +159,9 @@ func main() {
 		pci := getPciPath(iface.Name)
 		driver := getDriverName(iface.Name)
 		speed := getSpeed(iface.Name)
+		if pci != "???" {
+			devices = append(devices, device{iface.Name, pci, getDeviceName(pci)})
+		}
 
 		addrs, err := iface.Addrs()
 		if err != nil {
@@ -152,6 +181,13 @@ func main() {
 				links = append(links, link{iface.Name, addr, driver, speed, pci})
 			}
 		}
+	}
+	fmt.Println()
+
+	fmt.Println("Devices:")
+	for _, device := range devices {
+		pci := strings.TrimPrefix(device.pci, "0000:")
+		fmt.Printf("\t%-14s %-8s %q\n", device.iface, pci, device.name)
 	}
 	fmt.Println()
 

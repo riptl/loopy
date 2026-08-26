@@ -12,6 +12,11 @@ Addresses:
         enp176s0f0np0  fe80:0000:0000:0000:5e6f:69ff:feef:d250  5c:6f:69:ef:d2:50  0000:b0:00.0  bnxt_en
         enp176s0f1np1  fe80:0000:0000:0000:5e6f:69ff:feef:d251  5c:6f:69:ef:d2:51  0000:b0:00.1  bnxt_en
 
+Devices:
+        eno1           40:00.0  "Intel Corporation 82599ES 10-Gigabit SFI/SFP+ Network Connection"
+        enp32s0f0np0   20:00.0  "Intel Corporation Ethernet Controller X710 for 10GbE SFP+"
+        enp32s0f1np1   20:00.1  "Intel Corporation Ethernet Controller X710 for 10GbE SFP+"
+
 Connectivity:
         enp32s0f0np0   i40e       | enp160s0f0np0  mlx5_core  |  10 Gbps
         enp32s0f1np1   i40e       | enp160s0f1np1  mlx5_core  |  10 Gbps
